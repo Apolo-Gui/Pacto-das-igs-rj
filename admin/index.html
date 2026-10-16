@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <title>Pacto das IGs • Administração</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./admin.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script defer src="../cms-config.js"></script>
+  <script defer src="./admin.js"></script>
+</head>
+<body>
+  <div id="setup" class="center-screen" hidden>
+    <div class="access-card">
+      <div class="seal"><img src="/imgs/logo.png" alt="Logo pacto"></div>
+      <p class="eyebrow">Configuração inicial</p>
+      <h1>Conectar o painel</h1>
+      <p>Preencha a URL e a chave pública do Supabase no arquivo <code>cms-config.js</code>. Execute também o SQL de <code>supabase/schema.sql</code> e cadastre seu usuário administrador.</p>
+      <p class="hint">A chave <strong>service_role/secret</strong> nunca deve aparecer em arquivos HTML/JS.</p>
+    </div>
+  </div>
+
+  <div id="access" class="center-screen" hidden>
+    <div class="access-card">
+      <div class="seal">P<span>•</span>IG</div>
+      <p class="eyebrow">Área restrita</p>
+      <h1>Bem-vindo de volta.</h1>
+      <p>Acesse o ambiente de gestão de notícias e indicações geográficas.</p>
+      <form id="login-form" class="field-stack">
+        <label>E-mail<input type="email" name="email" autocomplete="username" required placeholder="seu@email.com"></label>
+        <label>Senha<input type="password" name="password" autocomplete="current-password" required placeholder="Sua senha"></label>
+        <button class="btn primary full" type="submit" id="login-submit">Entrar no painel <span>↗</span></button>
+      </form>
+      <p id="login-error" class="error" role="alert" aria-live="polite"></p>
+      <p class="hint">Apenas usuários autorizados podem editar o conteúdo.</p>
+    </div>
+    <div class="access-aside"><span>PACTO DAS INDICAÇÕES GEOGRÁFICAS</span><h2>Territórios que contam histórias.</h2><p>Gestão de conteúdo e valorização das identidades fluminenses.</p></div>
+  </div>
+
+  <div id="workspace" class="workspace" hidden>
+    <aside class="sidebar">
+      <div class="sidebar-top">
+        <a class="brand" href="../home.html" aria-label="Visitar site"><div><strong><img src="/imgs/logo-footer.png" alt="Logo pacto" width="35px" align="left">Pacto das IGs</strong><small>PAINEL DE GESTÃO</small></div></a>
+        <div class="side-label">GERENCIAMENTO</div>
+        <nav class="side-nav" aria-label="Seções do painel">
+          <button type="button" data-view="overview" class="nav-item active"><span class="nav-icon">◫</span> Visão geral</button>
+          <button type="button" data-view="news" class="nav-item"><span class="nav-icon">▤</span> Notícias</button>
+          <button type="button" data-view="igs" class="nav-item"><span class="nav-icon">◇</span> Indicações geográficas</button>
+        </nav>
+      </div>
+      <div class="sidebar-bottom"><a class="site-link" href="../home.html" target="_blank" rel="noopener">↗ &nbsp;Visualizar site</a><button class="logout" id="logout" type="button">Sair da conta <span>→</span></button></div>
+    </aside>
+    <div class="main-shell">
+      <header class="topbar"><button id="mobile-menu" class="mobile-menu" aria-label="Abrir menu">☰</button><span class="breadcrumb">Pacto das IGs <span>/</span> <b id="breadcrumb">Visão geral</b></span><div class="topbar-user"><span class="online-dot"></span><span id="user-email">Administrador</span><span class="avatar">A</span></div></header>
+      <main class="content">
+        <div class="page-heading"><div><p class="eyebrow">CONTEÚDO & PUBLICAÇÕES</p><h1 id="page-title">Painel de controle</h1><p class="subheading" id="page-subtitle">Uma visão clara do que está acontecendo no seu site.</p></div><button type="button" class="btn primary" id="new-item">+ Nova notícia</button></div>
+        <section class="stats" id="stats" aria-label="Indicadores"></section>
+        <section class="panel intro" id="overview-panel"><div class="panel-kicker">ACESSO RÁPIDO</div><h2>Seu conteúdo, suas escolhas.</h2><p>Publique notícias, atualize informações das IGs e escolha quais territórios ganham destaque na página inicial.</p><div class="quick-actions"><button type="button" class="quick-card" data-quick="news"><span>01</span><strong>Gerenciar notícias →</strong><small>Publicar, revisar ou arquivar</small></button><button type="button" class="quick-card" data-quick="igs"><span>02</span><strong>Organizar IGs →</strong><small>Definir destaque e ordem</small></button></div><div class="import-area"><div><strong>Conteúdo já existente no site?</strong><small>Importe os cards da home atual para começar a gerenciá-los.</small></div><button type="button" class="btn secondary" id="import-home">Importar cards da home</button></div></section>
+        <section id="data-panel" class="panel" hidden><div class="panel-header"><div><p class="panel-kicker" id="table-kicker">ACERVO</p><h2 id="table-heading">Conteúdos</h2></div><label class="search-wrap"><span>⌕</span><input id="search" type="search" placeholder="Buscar por nome ou título..." aria-label="Buscar conteúdos"></label></div><div id="records" class="record-list" aria-live="polite"></div></section>
+      </main>
+      <footer class="footer">PAINEL DE ADMINISTRAÇÃO <span>•</span> PACTO DAS IGS DO RIO DE JANEIRO</footer>
+    </div>
+  </div>
+
+  <dialog id="editor-dialog" aria-labelledby="dialog-title"><form id="editor-form" class="editor-form"><div class="dialog-heading"><div><p class="eyebrow">EDITOR DE CONTEÚDO</p><h2 id="dialog-title">Novo conteúdo</h2></div><button type="button" class="x-btn" id="close-dialog" aria-label="Fechar">×</button></div><div id="editor-fields" class="editor-fields"></div><div class="dialog-footer"><button type="button" class="btn secondary" id="cancel-edit">Cancelar</button><button type="submit" class="btn primary" id="save-edit">Salvar alterações</button></div></form></dialog>
+  <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+</body>
+</html>
