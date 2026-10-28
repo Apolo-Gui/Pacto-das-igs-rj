@@ -707,7 +707,6 @@
   .noticias__foot{ text-align:center; margin-top:40px; 
   }
   /* Grade compacta e arquivo de notícias */
-  .noticias__head { display:flex; }
   .noticias__tabs { flex-wrap:wrap; gap:8px 18px; }
   .noticias__grid {
     grid-template-columns:repeat(4,minmax(0,1fr));
